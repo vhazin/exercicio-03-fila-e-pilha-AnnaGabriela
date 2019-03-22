@@ -7,7 +7,6 @@ typedef struct Element {
 } Element;
 
 typedef struct Queue {
-    int size;
     struct Element *first, *last, *new, *pointer;
 } Queue;
 
@@ -34,7 +33,6 @@ int main() {
 
 Queue* createQueue(int size) {
     Queue *queue = malloc(sizeof(Queue));
-    queue->size = size;
     queue->first = queue->last = NULL;
 
     while(size--) {
