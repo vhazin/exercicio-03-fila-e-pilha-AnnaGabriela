@@ -7,12 +7,13 @@ typedef struct Element {
 } Element;
 
 typedef struct Queue {
-    struct Element *first, *last, *new, *pointer;
+    struct Element *first, *last, *new;
 } Queue;
 
 Queue* createQueue(int);
 int enqueue(Queue*, int);
-void getRemain(Queue*, Queue*);
+void dequeue(Queue*, int);
+void printQueue(Queue*);
 
 int main() {
     int initial_amount, exit_amount;
@@ -21,12 +22,13 @@ int main() {
     Queue *original_queue = createQueue(initial_amount);
 
     scanf("%d", &exit_amount);
-    Queue *exit_queue = createQueue(exit_amount);
+    while(exit_amount--) {
+        int id;
+        scanf("%d", &id);
+        dequeue(original_queue, id);
+    }
 
-    getRemain(original_queue, exit_queue);
-    
-    free(original_queue);
-    free(exit_queue);
+    printQueue(original_queue);
 
     return 0;
 }
@@ -63,22 +65,32 @@ int enqueue(Queue *queue, int id) {
     return 0;
 }
 
-void getRemain(Queue *original_queue, Queue *exit_queue) {
-    original_queue->pointer = original_queue->first;
+void dequeue(Queue *queue, int id) {
+    Element *pointer = queue->first;
+    Element *previous = NULL;
 
-    while(original_queue->pointer != NULL) {
-        exit_queue->pointer = exit_queue->first;
-        int has_left = 0;
-
-        while(exit_queue->pointer != NULL) {
-            if (original_queue->pointer->id == exit_queue->pointer->id) {
-                has_left = 1;
-                break;
+    while(pointer != NULL) {
+        if (id == pointer->id) {
+            if (previous == NULL) {
+                queue->first = pointer->next;
+                free(pointer);
+                return;
             }
-            exit_queue->pointer = exit_queue->pointer->next;
+            previous->next = pointer->next;
+            free(pointer);
+            pointer = pointer->next;
+            return;
         }
-        if (!has_left) printf("%d ", original_queue->pointer->id);
-        original_queue->pointer = original_queue->pointer->next;
+        previous = pointer;
+        pointer = pointer->next;
     }
-    putchar('\n');
+}
+
+void printQueue(Queue *queue) {
+    Element *pointer = queue->first;
+    for(int i = 1; pointer != NULL; i++) {
+        printf("%d ", pointer->id);
+        pointer = pointer->next;
+    }
+    printf("\n");
 }
