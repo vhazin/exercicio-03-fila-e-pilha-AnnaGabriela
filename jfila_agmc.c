@@ -7,7 +7,7 @@ typedef struct Element {
 } Element;
 
 typedef struct Queue {
-    struct Element *first, *last, *new;
+    struct Element *first, *last;
 } Queue;
 
 Queue* createQueue(int);
@@ -47,8 +47,7 @@ Queue* createQueue(int size) {
 }
 
 int enqueue(Queue *queue, int id) {
-    Element *new_element = queue->new;
-    new_element = malloc(sizeof(struct Element));
+    Element *new_element = malloc(sizeof(struct Element));
     
     new_element->id = id;
     new_element->next = NULL;
